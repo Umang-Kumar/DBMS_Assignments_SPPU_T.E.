@@ -1,0 +1,135 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| assign4            |
+| assign_2           |
+| assign_2a          |
+| assign_3           |
+| db                 |
+| demo               |
+| mydatabase         |
+| mysql              |
+| performance_schema |
+| sachin             |
+| stud               |
+| sys                |
+| umang              |
++--------------------+
+14 rows in set (0.02 sec)
+
+mysql> use umang;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-----------------+
+| Tables_in_umang |
++-----------------+
+| Employee        |
+| Project         |
+| borrower        |
+| fine            |
+| product         |
+| suppliers       |
++-----------------+
+6 rows in set (0.00 sec)
+
+mysql> create table O_rollcall(rno int(3) primary key, name varchar(30), addr varchar(40));
+Query OK, 0 rows affected (0.23 sec)
+
+mysql> insert into O_rollcall values(1, 'Amit', 'Nashik');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into O_rollcall values(2, 'Charcha', 'Ajmer');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into O_rollcall values(3, 'Umang', 'Hajipur');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from O_rollcall;
++-----+---------+---------+
+| rno | name    | addr    |
++-----+---------+---------+
+|   1 | Amit    | Nashik  |
+|   2 | Charcha | Ajmer   |
+|   3 | Umang   | Hajipur |
++-----+---------+---------+
+3 rows in set (0.00 sec)
+
+mysql> create table N_rollcall(rno int(3), name varchar(30), addr varchar(40));
+Query OK, 0 rows affected (0.24 sec)
+
+mysql> select * from N_rollcall;
+Empty set (0.00 sec)
+
+mysql> insert into N_rollcall select * from O_rollcall;
+Query OK, 3 rows affected (0.04 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from N_rollcall;
++------+---------+---------+
+| rno  | name    | addr    |
++------+---------+---------+
+|    1 | Amit    | Nashik  |
+|    2 | Charcha | Ajmer   |
+|    3 | Umang   | Hajipur |
++------+---------+---------+
+3 rows in set (0.00 sec)
+
+mysql> insert into O_rollcall values(4, 'Naren', 'Guntur');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> delimiter //
+mysql> create procedure newcur(in rno1 int(3))
+    -> begin
+    -> declare c1 cursor for select rno from O_rollcall where rno = rno1;
+    -> open c1;
+    -> fetch c1 into rno1;
+    -> if not exists(select * from N_rollcall where rno = rno1) then insert into N_rollcall select * from O_rollcall where rno = rno1;
+    -> end if;
+    -> close c1;
+    -> end
+    -> //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call newcur(2)//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call newcur(4)//
+Query OK, 1 row affected (0.08 sec)
+
+mysql> delete froete from N_rollcall;
+    -> //
+ERROR 1109 (42S02): Unknown table 'froete' in MULTI DELETE
+mysql> delete from N_rollcall//
+Query OK, 4 rows affected (0.03 sec)
+
+mysql> call newcur(1)//
+Query OK, 1 row affected (0.04 sec)
+
+mysql> select * from N_rollcall//
++------+------+--------+
+| rno  | name | addr   |
++------+------+--------+
+|    1 | Amit | Nashik |
++------+------+--------+
+1 row in set (0.01 sec)
+
+mysql> call newcur(2)//
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select * from N_rollcall//
++------+---------+--------+
+| rno  | name    | addr   |
++------+---------+--------+
+|    1 | Amit    | Nashik |
+|    2 | Charcha | Ajmer  |
++------+---------+--------+
+2 rows in set (0.00 sec)
+
+mysql> call newcur(2)//
+Query OK, 0 rows affected (0.01 sec)
+

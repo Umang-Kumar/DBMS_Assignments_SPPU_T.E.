@@ -1,0 +1,942 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.02 sec)
+
+mysql> create database umang;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| umang              |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> drop umang;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'umang' at line 1
+mysql> drop database umang;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> create database umang;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use umang;
+Database changed
+mysql> show tables;
+Empty set (0.00 sec)
+
+mysql> create table product;
+ERROR 1113 (42000): A table must have at least 1 column
+mysql> create table product(p
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> create table product(p_id int(11) primary key, p_code char(3), name varchar(25), quantity int(10) unsigned, price decimal(3,2), supply_id int(10) unsigned);
+Query OK, 0 rows affected (0.30 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_umang |
++-----------------+
+| product         |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> desc product;
++-----------+------------------+------+-----+---------+-------+
+| Field     | Type             | Null | Key | Default | Extra |
++-----------+------------------+------+-----+---------+-------+
+| p_id      | int(11)          | NO   | PRI | NULL    |       |
+| p_code    | char(3)          | YES  |     | NULL    |       |
+| name      | varchar(25)      | YES  |     | NULL    |       |
+| quantity  | int(10) unsigned | YES  |     | NULL    |       |
+| price     | decimal(3,2)     | YES  |     | NULL    |       |
+| supply_id | int(10) unsigned | YES  |     | NULL    |       |
++-----------+------------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> insert into product values() 
+    -> ^C
+mysql> insert into product values(01, "A", "Shampoo", 5, 50.7, 125);
+ERROR 1264 (22003): Out of range value for column 'price' at row 1
+mysql> insert into product values(01, "A", "Shampoo", 5, 1.25, 125);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> select * from product;
++------+--------+---------+----------+-------+-----------+
+| p_id | p_code | name    | quantity | price | supply_id |
++------+--------+---------+----------+-------+-----------+
+|    1 | A      | Shampoo |        5 |  1.25 |       125 |
++------+--------+---------+----------+-------+-----------+
+1 row in set (0.00 sec)
+
+mysql> insert into product values(02, "AA", "Conditioner", 15, 3.25, 117);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into product values(03, "B", "Soap", 18, 1.50, 103);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> insert into product values(04, "C", "Gel", 10, 1.15, 17);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into product values(05, "F", "Scrubber", 5, 2.00, 148);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select * from product;
++------+--------+-------------+----------+-------+-----------+
+| p_id | p_code | name        | quantity | price | supply_id |
++------+--------+-------------+----------+-------+-----------+
+|    1 | A      | Shampoo     |        5 |  1.25 |       125 |
+|    2 | AA     | Conditioner |       15 |  3.25 |       117 |
+|    3 | B      | Soap        |       18 |  1.50 |       103 |
+|    4 | C      | Gel         |       10 |  1.15 |        17 |
+|    5 | F      | Scrubber    |        5 |  2.00 |       148 |
++------+--------+-------------+----------+-------+-----------+
+5 rows in set (0.01 sec)
+
+mysql> select p_id, name from product where price>1.20;
++------+-------------+
+| p_id | name        |
++------+-------------+
+|    1 | Shampoo     |
+|    2 | Conditioner |
+|    3 | Soap        |
+|    5 | Scrubber    |
++------+-------------+
+4 rows in set (0.02 sec)
+
+mysql> select p_id, name from product where supply_id=103;
++------+------+
+| p_id | name |
++------+------+
+|    3 | Soap |
++------+------+
+1 row in set (0.00 sec)
+
+mysql> select p_id, name from product where supply_id=13;
+Empty set (0.00 sec)
+
+mysql> select p_id, name from product where price>1.20 and quantity<15;
++------+----------+
+| p_id | name     |
++------+----------+
+|    1 | Shampoo  |
+|    5 | Scrubber |
++------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select p_id, name from product order by = price;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= price' at line 1
+mysql> select p_id, name from product order by = "price";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= "price"' at line 1
+mysql> select p_id, name from product order_by = "price";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '= "price"' at line 1
+mysql> select p_id, name from product order_by price;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'price' at line 1
+mysql> select p_id, name from product order by price;
++------+-------------+
+| p_id | name        |
++------+-------------+
+|    4 | Gel         |
+|    1 | Shampoo     |
+|    3 | Soap        |
+|    5 | Scrubber    |
+|    2 | Conditioner |
++------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select p_id, name from product group by price;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'umang.product.p_id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select p_id, name from product order by price;
++------+-------------+
+| p_id | name        |
++------+-------------+
+|    4 | Gel         |
+|    1 | Shampoo     |
+|    3 | Soap        |
+|    5 | Scrubber    |
+|    2 | Conditioner |
++------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select p_id, name, price from product order by price;
++------+-------------+-------+
+| p_id | name        | price |
++------+-------------+-------+
+|    4 | Gel         |  1.15 |
+|    1 | Shampoo     |  1.25 |
+|    3 | Soap        |  1.50 |
+|    5 | Scrubber    |  2.00 |
+|    2 | Conditioner |  3.25 |
++------+-------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select p_id, name, price from product order by price des;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'des' at line 1
+mysql> select p_id, name, price from product order by price desc;
++------+-------------+-------+
+| p_id | name        | price |
++------+-------------+-------+
+|    2 | Conditioner |  3.25 |
+|    5 | Scrubber    |  2.00 |
+|    3 | Soap        |  1.50 |
+|    1 | Shampoo     |  1.25 |
+|    4 | Gel         |  1.15 |
++------+-------------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select p_id, name from product group by p_id;
++------+-------------+
+| p_id | name        |
++------+-------------+
+|    1 | Shampoo     |
+|    2 | Conditioner |
+|    3 | Soap        |
+|    4 | Gel         |
+|    5 | Scrubber    |
++------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> create table suppliers(s_id int unsigned primary key, name varchar(30), phone char(10));
+Query OK, 0 rows affected (0.27 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_umang |
++-----------------+
+| product         |
+| suppliers       |
++-----------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from product;
++------+--------+-------------+----------+-------+-----------+
+| p_id | p_code | name        | quantity | price | supply_id |
++------+--------+-------------+----------+-------+-----------+
+|    1 | A      | Shampoo     |        5 |  1.25 |       125 |
+|    2 | AA     | Conditioner |       15 |  3.25 |       117 |
+|    3 | B      | Soap        |       18 |  1.50 |       103 |
+|    4 | C      | Gel         |       10 |  1.15 |        17 |
+|    5 | F      | Scrubber    |        5 |  2.00 |       148 |
++------+--------+-------------+----------+-------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> desc supplliers;
+ERROR 1146 (42S02): Table 'umang.supplliers' doesn't exist
+mysql> desc suppliers;
++-------+------------------+------+-----+---------+-------+
+| Field | Type             | Null | Key | Default | Extra |
++-------+------------------+------+-----+---------+-------+
+| s_id  | int(10) unsigned | NO   | PRI | NULL    |       |
+| name  | varchar(30)      | YES  |     | NULL    |       |
+| phone | char(10)         | YES  |     | NULL    |       |
++-------+------------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into suppliers values(125, "Vatika", "1257894636");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into suppliers values(117, "Sunsilk", "8237497636");
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into suppliers values(103, "Liril", "6036427738");
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into suppliers values(17, "Fiama", "9356400788");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into suppliers values(148, "Garnier", "8856314720");
+Query OK, 1 row affected (0.04 sec)
+
+mysql> select * from suppliers;
++------+---------+------------+
+| s_id | name    | phone      |
++------+---------+------------+
+|   17 | Fiama   | 9356400788 |
+|  103 | Liril   | 6036427738 |
+|  117 | Sunsilk | 8237497636 |
+|  125 | Vatika  | 1257894636 |
+|  148 | Garnier | 8856314720 |
++------+---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from product;
++------+--------+-------------+----------+-------+-----------+
+| p_id | p_code | name        | quantity | price | supply_id |
++------+--------+-------------+----------+-------+-----------+
+|    1 | A      | Shampoo     |        5 |  1.25 |       125 |
+|    2 | AA     | Conditioner |       15 |  3.25 |       117 |
+|    3 | B      | Soap        |       18 |  1.50 |       103 |
+|    4 | C      | Gel         |       10 |  1.15 |        17 |
+|    5 | F      | Scrubber    |        5 |  2.00 |       148 |
++------+--------+-------------+----------+-------+-----------+
+5 rows in set (0.01 sec)
+
+mysql> desc suppliers;
++-------+------------------+------+-----+---------+-------+
+| Field | Type             | Null | Key | Default | Extra |
++-------+------------------+------+-----+---------+-------+
+| s_id  | int(10) unsigned | NO   | PRI | NULL    |       |
+| name  | varchar(30)      | YES  |     | NULL    |       |
+| phone | char(10)         | YES  |     | NULL    |       |
++-------+------------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc product;
++-----------+------------------+------+-----+---------+-------+
+| Field     | Type             | Null | Key | Default | Extra |
++-----------+------------------+------+-----+---------+-------+
+| p_id      | int(11)          | NO   | PRI | NULL    |       |
+| p_code    | char(3)          | YES  |     | NULL    |       |
+| name      | varchar(25)      | YES  |     | NULL    |       |
+| quantity  | int(10) unsigned | YES  |     | NULL    |       |
+| price     | decimal(3,2)     | YES  |     | NULL    |       |
+| supply_id | int(10) unsigned | YES  |     | NULL    |       |
++-----------+------------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> alter table 'product' add foreign key (supply_id) references suppliers(s_id);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''product' add foreign key (supply_id) references suppliers(s_id)' at line 1
+mysql> alter table product add foreign key (supply_id) references suppliers(s_id);
+Query OK, 5 rows affected (0.74 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> desc product;
++-----------+------------------+------+-----+---------+-------+
+| Field     | Type             | Null | Key | Default | Extra |
++-----------+------------------+------+-----+---------+-------+
+| p_id      | int(11)          | NO   | PRI | NULL    |       |
+| p_code    | char(3)          | YES  |     | NULL    |       |
+| name      | varchar(25)      | YES  |     | NULL    |       |
+| quantity  | int(10) unsigned | YES  |     | NULL    |       |
+| price     | decimal(3,2)     | YES  |     | NULL    |       |
+| supply_id | int(10) unsigned | YES  | MUL | NULL    |       |
++-----------+------------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> select product.name, suppliers.name from product where supply_id > 10;
+ERROR 1054 (42S22): Unknown column 'suppliers.name' in 'field list'
+mysql> select product.name, suppliers.name from product, suppliers where supply_id > 10;
++-------------+---------+
+| name        | name    |
++-------------+---------+
+| Shampoo     | Fiama   |
+| Conditioner | Fiama   |
+| Soap        | Fiama   |
+| Gel         | Fiama   |
+| Scrubber    | Fiama   |
+| Shampoo     | Liril   |
+| Conditioner | Liril   |
+| Soap        | Liril   |
+| Gel         | Liril   |
+| Scrubber    | Liril   |
+| Shampoo     | Sunsilk |
+| Conditioner | Sunsilk |
+| Soap        | Sunsilk |
+| Gel         | Sunsilk |
+| Scrubber    | Sunsilk |
+| Shampoo     | Vatika  |
+| Conditioner | Vatika  |
+| Soap        | Vatika  |
+| Gel         | Vatika  |
+| Scrubber    | Vatika  |
+| Shampoo     | Garnier |
+| Conditioner | Garnier |
+| Soap        | Garnier |
+| Gel         | Garnier |
+| Scrubber    | Garnier |
++-------------+---------+
+25 rows in set (0.00 sec)
+
+mysql> select product.name, suppliers.name from product, suppliers where supply_id == s_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '== s_id' at line 1
+mysql> select product.name, suppliers.name from product, suppliers where supply_id equals s_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'equals s_id' at line 1
+mysql> select product.name, suppliers.name from product, suppliers where supply_id = s_id;
++-------------+---------+
+| name        | name    |
++-------------+---------+
+| Shampoo     | Vatika  |
+| Conditioner | Sunsilk |
+| Soap        | Liril   |
+| Gel         | Fiama   |
+| Scrubber    | Garnier |
++-------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select * from product, suppliers where supply_id = s_id;
++------+--------+-------------+----------+-------+-----------+------+---------+------------+
+| p_id | p_code | name        | quantity | price | supply_id | s_id | name    | phone      |
++------+--------+-------------+----------+-------+-----------+------+---------+------------+
+|    1 | A      | Shampoo     |        5 |  1.25 |       125 |  125 | Vatika  | 1257894636 |
+|    2 | AA     | Conditioner |       15 |  3.25 |       117 |  117 | Sunsilk | 8237497636 |
+|    3 | B      | Soap        |       18 |  1.50 |       103 |  103 | Liril   | 6036427738 |
+|    4 | C      | Gel         |       10 |  1.15 |        17 |   17 | Fiama   | 9356400788 |
+|    5 | F      | Scrubber    |        5 |  2.00 |       148 |  148 | Garnier | 8856314720 |
++------+--------+-------------+----------+-------+-----------+------+---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from product, suppliers where supply_id = s_id order by s_id;
++------+--------+-------------+----------+-------+-----------+------+---------+------------+
+| p_id | p_code | name        | quantity | price | supply_id | s_id | name    | phone      |
++------+--------+-------------+----------+-------+-----------+------+---------+------------+
+|    4 | C      | Gel         |       10 |  1.15 |        17 |   17 | Fiama   | 9356400788 |
+|    3 | B      | Soap        |       18 |  1.50 |       103 |  103 | Liril   | 6036427738 |
+|    2 | AA     | Conditioner |       15 |  3.25 |       117 |  117 | Sunsilk | 8237497636 |
+|    1 | A      | Shampoo     |        5 |  1.25 |       125 |  125 | Vatika  | 1257894636 |
+|    5 | F      | Scrubber    |        5 |  2.00 |       148 |  148 | Garnier | 8856314720 |
++------+--------+-------------+----------+-------+-----------+------+---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select product.name, suppliers.name from product, suppliers where supply_id = s_id and name like "S%";
+ERROR 1052 (23000): Column 'name' in where clause is ambiguous
+mysql> select product.name, suppliers.name from product, suppliers where supply_id = s_id and product.name like "S%";
++----------+---------+
+| name     | name    |
++----------+---------+
+| Shampoo  | Vatika  |
+| Soap     | Liril   |
+| Scrubber | Garnier |
++----------+---------+
+3 rows in set (0.00 sec)
+
+mysql> select * from product, suppliers where supply_id = s_id and product.name like "S%";
++------+--------+----------+----------+-------+-----------+------+---------+------------+
+| p_id | p_code | name     | quantity | price | supply_id | s_id | name    | phone      |
++------+--------+----------+----------+-------+-----------+------+---------+------------+
+|    1 | A      | Shampoo  |        5 |  1.25 |       125 |  125 | Vatika  | 1257894636 |
+|    3 | B      | Soap     |       18 |  1.50 |       103 |  103 | Liril   | 6036427738 |
+|    5 | F      | Scrubber |        5 |  2.00 |       148 |  148 | Garnier | 8856314720 |
++------+--------+----------+----------+-------+-----------+------+---------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from product, suppliers where supply_id = s_id and product.name as "S%";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'as "S%"' at line 1
+mysql> select * from product, suppliers where supply_id = s_id and product.name like "%S";
+Empty set (0.00 sec)
+
+mysql> select * from product, suppliers where supply_id = s_id and product.name like "%r";
++------+--------+-------------+----------+-------+-----------+------+---------+------------+
+| p_id | p_code | name        | quantity | price | supply_id | s_id | name    | phone      |
++------+--------+-------------+----------+-------+-----------+------+---------+------------+
+|    2 | AA     | Conditioner |       15 |  3.25 |       117 |  117 | Sunsilk | 8237497636 |
+|    5 | F      | Scrubber    |        5 |  2.00 |       148 |  148 | Garnier | 8856314720 |
++------+--------+-------------+----------+-------+-----------+------+---------+------------+
+2 rows in set (0.00 sec)
+
+mysql> alter table product change supply_id s_id int;
+ERROR 1846 (0A000): ALGORITHM=COPY is not supported. Reason: Columns participating in a foreign key are renamed. Try ALGORITHM=INPLACE.
+mysql> update table product change supply_id s_id int;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table product change supply_id s_id int' at line 1
+mysql> ^C
+mysql> notee;
+mysql> create table Employee (e_id int primary key, ename varchar(20), address varchar(20), salary int, commison int);
+Query OK, 0 rows affected (0.26 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_umang |
++-----------------+
+| Employee        |
+| product         |
+| suppliers       |
++-----------------+
+3 rows in set (0.00 sec)
+
+mysql> desc Employee;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| e_id     | int(11)     | NO   | PRI | NULL    |       |
+| ename    | varchar(20) | YES  |     | NULL    |       |
+| address  | varchar(20) | YES  |     | NULL    |       |
+| salary   | int(11)     | YES  |     | NULL    |       |
+| commison | int(11)     | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into Employee values(1,'Amit','Pune',35000,5000) , (2,'Sneha','Pune',25000,NULL), (3,'Savita','Nasik',28000,2000);
+Query OK, 3 rows affected (0.04 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from Employee;
++------+--------+---------+--------+----------+
+| e_id | ename  | address | salary | commison |
++------+--------+---------+--------+----------+
+|    1 | Amit   | Pune    |  35000 |     5000 |
+|    2 | Sneha  | Pune    |  25000 |     NULL |
+|    3 | Savita | Nasik   |  28000 |     2000 |
++------+--------+---------+--------+----------+
+3 rows in set (0.00 sec)
+
+mysql> insert into Employee values(4,'Pooja','Mumbai',19000,) , (5,'Sagar','Mumbai',25000,3000), (6,'Rohit','Jaipur',40000,) , (7, 'Poonam', 'Patna', 45000, 2000) , (8, 'Arjun', 'Delhi', 20000, 900) , (9, 'Rahul', 'Nagpur', 60000, 5000) , (10, 'Dulquer', 'Kochi', 30000, 1000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') , (5,'Sagar','Mumbai',25000,3000), (6,'Rohit','Jaipur',40000,) , (7, 'Poonam',' at line 1
+mysql> insert into Employee values(4,'Pooja','Mumbai',19000, null) , (5,'Sagar','Mumbai',25000,3000), (6,'Rohit','Jaipur',40000,) , (7, 'Poonam', 'Patna', 45000, 2000) , (8, 'Arjun', 'Delhi', 20000, 900) , (9, 'Rahul', 'Nagpur', 60000, 5000) , (10, 'Dulquer', 'Kochi', 30000, 1000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') , (7, 'Poonam', 'Patna', 45000, 2000) , (8, 'Arjun', 'Delhi', 20000, 900) , (9' at line 1
+mysql> insert into Employee values(4,'Pooja','Mumbai',19000, null) , (5,'Sagar','Mumbai',25000,3000), (6,'Rohit','Jaipur',40000,) , (7, 'Poonam', 'Patna', 45000, 2000) , (8, 'Arjun', 'Delhi', 20000, 900) , (9, 'Rahul', 'Nagpur', 60000, 5000) , (10, 'Dulquer', 'Kochi', 30000, 1000)
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') , (7, 'Poonam', 'Patna', 45000, 2000) , (8, 'Arjun', 'Delhi', 20000, 900) , (9' at line 1
+mysql> insert into Employee values(4,'Pooja','Mumbai',19000) , (5,'Sagar','Mumbai',25000,3000), (6,'Rohit','Jaipur',40000,) , (7, 'Poonam', 'Patna', 45000, 2000) , (8, 'Arjun', 'Delhi', 20000, 900) , (9, 'Rahul', 'Nagpur', 60000, 5000) , (10, 'Dulquer', 'Kochi', 30000, 1000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') , (7, 'Poonam', 'Patna', 45000, 2000) , (8, 'Arjun', 'Delhi', 20000, 900) , (9' at line 1
+mysql> insert into Employee values(4,'Pooja','Mumbai',19000) , (5,'Sagar','Mumbai',25000,3000), (6,'Rohit','Jaipur',40000) , (7, 'Poonam', 'Patna', 45000, 2000) , (8, 'Arjun', 'Delhi', 20000, 900) , (9, 'Rahul', 'Nagpur', 60000, 5000) , (10, 'Dulquer', 'Kochi', 30000, 1000);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into Employee values(4,'Pooja','Mumbai',19000, null) , (5,'Sagar','Mumbai',25000,3000), (6,'Rohit','Jaipur',40000, null) , (7, 'Poonam', 'Patna', 45000, 2000) , (8, 'Arjun', 'Delhi', 20000, 900) , (9, 'Rahul', 'Nagpur', 60000, 5000) , (10, 'Dulquer', 'Kochi', 30000, 1000);
+Query OK, 7 rows affected (0.04 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from Employee;
++------+---------+---------+--------+----------+
+| e_id | ename   | address | salary | commison |
++------+---------+---------+--------+----------+
+|    1 | Amit    | Pune    |  35000 |     5000 |
+|    2 | Sneha   | Pune    |  25000 |     NULL |
+|    3 | Savita  | Nasik   |  28000 |     2000 |
+|    4 | Pooja   | Mumbai  |  19000 |     NULL |
+|    5 | Sagar   | Mumbai  |  25000 |     3000 |
+|    6 | Rohit   | Jaipur  |  40000 |     NULL |
+|    7 | Poonam  | Patna   |  45000 |     2000 |
+|    8 | Arjun   | Delhi   |  20000 |      900 |
+|    9 | Rahul   | Nagpur  |  60000 |     5000 |
+|   10 | Dulquer | Kochi   |  30000 |     1000 |
++------+---------+---------+--------+----------+
+10 rows in set (0.00 sec)
+
+mysql> create table Project (pr_no int primary key, addr varchar(20));
+Query OK, 0 rows affected (0.30 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_umang |
++-----------------+
+| Employee        |
+| Project         |
+| product         |
+| suppliers       |
++-----------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into Project values (
+    -> (10, 'Mumbai'),
+    -> (20, 'Pune'),
+    -> (30, 'Jalgaon'),
+    -> (40, 'Nagpur'),
+    -> (50, 'Delhi'),
+    -> (60, 'Kochi'),
+    -> (70, 'Pune'),
+    -> (80, 'Nasik'),
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 10
+mysql> insert into Project values (
+    -> (10, 'Mumbai'),
+    -> (20, 'Pune'),
+    -> (30, 'Jalgaon'),
+    -> (40, 'Nagpur'),
+    -> (50, 'Delhi'),
+    -> (60, 'Kochi'),
+    -> (70, 'Pune'),
+    -> (80, 'Nasik')
+    -> );
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into Project values (
+    ->     -> (10, 'Mumbai'),
+    ->     -> (20, 'Pune'),
+    ->     -> (30, 'Jalgaon'),
+    ->     -> (40, 'Nagpur'),
+    ->     -> (50, 'Delhi'),
+    ->     -> (60, 'Kochi'),
+    ->     -> (70, 'Pune'),
+    ->     -> (80, 'Nasik')
+    ->     -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> (10, 'Mumbai'),
+    -> (20, 'Pune'),
+    -> (30, 'Jalgaon'),
+    -> (40, 'Nag' at line 2
+mysql> insert into Project values
+    -> (10, 'Mumbai'),
+    -> (20, 'Pune'),
+    -> (30, 'Jalgaon'),
+    -> (40, 'Nagpur'),
+    -> (50, 'Delhi'),
+    -> (60, 'Kochi'),
+    -> (70, 'Pune'),
+    -> (80, 'Nasik'):
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ':' at line 9
+mysql> insert into Project values
+    -> (10, 'Mumbai'),
+    -> (20, 'Pune'),
+    -> (30, 'Jalgaon'),
+    -> (40, 'Nagpur'),
+    -> (50, 'Delhi'),
+    -> (60, 'Kochi'),
+    -> (70, 'Pune'),
+    -> (80, 'Nasik');
+Query OK, 8 rows affected (0.04 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql> select * from Project;
++-------+---------+
+| pr_no | addr    |
++-------+---------+
+|    10 | Mumbai  |
+|    20 | Pune    |
+|    30 | Jalgaon |
+|    40 | Nagpur  |
+|    50 | Delhi   |
+|    60 | Kochi   |
+|    70 | Pune    |
+|    80 | Nasik   |
++-------+---------+
+8 rows in set (0.00 sec)
+
+mysql> select * from Employee;
++------+---------+---------+--------+----------+
+| e_id | ename   | address | salary | commison |
++------+---------+---------+--------+----------+
+|    1 | Amit    | Pune    |  35000 |     5000 |
+|    2 | Sneha   | Pune    |  25000 |     NULL |
+|    3 | Savita  | Nasik   |  28000 |     2000 |
+|    4 | Pooja   | Mumbai  |  19000 |     NULL |
+|    5 | Sagar   | Mumbai  |  25000 |     3000 |
+|    6 | Rohit   | Jaipur  |  40000 |     NULL |
+|    7 | Poonam  | Patna   |  45000 |     2000 |
+|    8 | Arjun   | Delhi   |  20000 |      900 |
+|    9 | Rahul   | Nagpur  |  60000 |     5000 |
+|   10 | Dulquer | Kochi   |  30000 |     1000 |
++------+---------+---------+--------+----------+
+10 rows in set (0.00 sec)
+
+mysql> select distinct address from Employee;
++---------+
+| address |
++---------+
+| Pune    |
+| Nasik   |
+| Mumbai  |
+| Jaipur  |
+| Patna   |
+| Delhi   |
+| Nagpur  |
+| Kochi   |
++---------+
+8 rows in set (0.00 sec)
+
+mysql> select max(salary) as MaxSalary, min(salary) as MinSalary, avg(salary) as AvgSalary, sum(salary) as TotalSalary;
+ERROR 1054 (42S22): Unknown column 'salary' in 'field list'
+mysql> select max(salary) as MaxSalary, min(salary) as MinSalary, avg(salary) as AvgSalary, sum(salary) as TotalSalary from Employee;
++-----------+-----------+------------+-------------+
+| MaxSalary | MinSalary | AvgSalary  | TotalSalary |
++-----------+-----------+------------+-------------+
+|     60000 |     19000 | 32700.0000 |      327000 |
++-----------+-----------+------------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select * from Employee order by salary;
++------+---------+---------+--------+----------+
+| e_id | ename   | address | salary | commison |
++------+---------+---------+--------+----------+
+|    4 | Pooja   | Mumbai  |  19000 |     NULL |
+|    8 | Arjun   | Delhi   |  20000 |      900 |
+|    2 | Sneha   | Pune    |  25000 |     NULL |
+|    5 | Sagar   | Mumbai  |  25000 |     3000 |
+|    3 | Savita  | Nasik   |  28000 |     2000 |
+|   10 | Dulquer | Kochi   |  30000 |     1000 |
+|    1 | Amit    | Pune    |  35000 |     5000 |
+|    6 | Rohit   | Jaipur  |  40000 |     NULL |
+|    7 | Poonam  | Patna   |  45000 |     2000 |
+|    9 | Rahul   | Nagpur  |  60000 |     5000 |
++------+---------+---------+--------+----------+
+10 rows in set (0.00 sec)
+
+mysql> select * from Employee where address = 'Nasik' or 'Pune';
++------+--------+---------+--------+----------+
+| e_id | ename  | address | salary | commison |
++------+--------+---------+--------+----------+
+|    3 | Savita | Nasik   |  28000 |     2000 |
++------+--------+---------+--------+----------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> select * from Employee where address = 'Nasik' or address = 'Pune';
++------+--------+---------+--------+----------+
+| e_id | ename  | address | salary | commison |
++------+--------+---------+--------+----------+
+|    1 | Amit   | Pune    |  35000 |     5000 |
+|    2 | Sneha  | Pune    |  25000 |     NULL |
+|    3 | Savita | Nasik   |  28000 |     2000 |
++------+--------+---------+--------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select * from Employee where commison = null;
+Empty set (0.00 sec)
+
+mysql> select * from Employee where commison = NULL;
+Empty set (0.00 sec)
+
+mysql> alter table Employee rename commison to commissionl;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'to commissionl' at line 1
+mysql> alter table Employee rename 'commison' to 'commission';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''commison' to 'commission'' at line 1
+mysql> alter table Employee rename column commison to commission;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'column commison to commission' at line 1
+mysql> alter table Employee rename column commison to commission;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'column commison to commission' at line 1
+mysql> alter table Employee rename commison to commission;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'to commission' at line 1
+mysql> select * from Employee where commison = null;
+Empty set (0.00 sec)
+
+mysql> select * from Employee where commison is null;
++------+-------+---------+--------+----------+
+| e_id | ename | address | salary | commison |
++------+-------+---------+--------+----------+
+|    2 | Sneha | Pune    |  25000 |     NULL |
+|    4 | Pooja | Mumbai  |  19000 |     NULL |
+|    6 | Rohit | Jaipur  |  40000 |     NULL |
++------+-------+---------+--------+----------+
+3 rows in set (0.00 sec)
+
+mysql> alter table Employee change column commison to commission int;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'to commission int' at line 1
+mysql> alter table Employee change column commison commission int;
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from Employee;
++------+---------+---------+--------+------------+
+| e_id | ename   | address | salary | commission |
++------+---------+---------+--------+------------+
+|    1 | Amit    | Pune    |  35000 |       5000 |
+|    2 | Sneha   | Pune    |  25000 |       NULL |
+|    3 | Savita  | Nasik   |  28000 |       2000 |
+|    4 | Pooja   | Mumbai  |  19000 |       NULL |
+|    5 | Sagar   | Mumbai  |  25000 |       3000 |
+|    6 | Rohit   | Jaipur  |  40000 |       NULL |
+|    7 | Poonam  | Patna   |  45000 |       2000 |
+|    8 | Arjun   | Delhi   |  20000 |        900 |
+|    9 | Rahul   | Nagpur  |  60000 |       5000 |
+|   10 | Dulquer | Kochi   |  30000 |       1000 |
++------+---------+---------+--------+------------+
+10 rows in set (0.00 sec)
+
+mysql> update Employee set address='Nashik' where e_id=1;
+Query OK, 1 row affected (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Employee;
++------+---------+---------+--------+------------+
+| e_id | ename   | address | salary | commission |
++------+---------+---------+--------+------------+
+|    1 | Amit    | Nashik  |  35000 |       5000 |
+|    2 | Sneha   | Pune    |  25000 |       NULL |
+|    3 | Savita  | Nasik   |  28000 |       2000 |
+|    4 | Pooja   | Mumbai  |  19000 |       NULL |
+|    5 | Sagar   | Mumbai  |  25000 |       3000 |
+|    6 | Rohit   | Jaipur  |  40000 |       NULL |
+|    7 | Poonam  | Patna   |  45000 |       2000 |
+|    8 | Arjun   | Delhi   |  20000 |        900 |
+|    9 | Rahul   | Nagpur  |  60000 |       5000 |
+|   10 | Dulquer | Kochi   |  30000 |       1000 |
++------+---------+---------+--------+------------+
+10 rows in set (0.00 sec)
+
+mysql> select * from Employee where name like 'A%';
+ERROR 1054 (42S22): Unknown column 'name' in 'where clause'
+mysql> select * from Employee where ename like 'A%';
++------+-------+---------+--------+------------+
+| e_id | ename | address | salary | commission |
++------+-------+---------+--------+------------+
+|    1 | Amit  | Nashik  |  35000 |       5000 |
+|    8 | Arjun | Delhi   |  20000 |        900 |
++------+-------+---------+--------+------------+
+2 rows in set (0.00 sec)
+
+mysql> select count(*) from Employee where address='Mumbai';
++----------+
+| count(*) |
++----------+
+|        2 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select count(*) from Employee group by address;
++----------+
+| count(*) |
++----------+
+|        1 |
+|        1 |
+|        1 |
+|        2 |
+|        1 |
+|        1 |
+|        1 |
+|        1 |
+|        1 |
++----------+
+9 rows in set (0.00 sec)
+
+mysql> select count(*) from Employee group by distinct address;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'distinct address' at line 1
+mysql> select address, count(*) from Employee group by address;
++---------+----------+
+| address | count(*) |
++---------+----------+
+| Delhi   |        1 |
+| Jaipur  |        1 |
+| Kochi   |        1 |
+| Mumbai  |        2 |
+| Nagpur  |        1 |
+| Nashik  |        1 |
+| Nasik   |        1 |
+| Patna   |        1 |
+| Pune    |        1 |
++---------+----------+
+9 rows in set (0.00 sec)
+
+mysql> select address from Employee union select address from Project;
+ERROR 1054 (42S22): Unknown column 'address' in 'field list'
+mysql> select * from Employee;
++------+---------+---------+--------+------------+
+| e_id | ename   | address | salary | commission |
++------+---------+---------+--------+------------+
+|    1 | Amit    | Nashik  |  35000 |       5000 |
+|    2 | Sneha   | Pune    |  25000 |       NULL |
+|    3 | Savita  | Nasik   |  28000 |       2000 |
+|    4 | Pooja   | Mumbai  |  19000 |       NULL |
+|    5 | Sagar   | Mumbai  |  25000 |       3000 |
+|    6 | Rohit   | Jaipur  |  40000 |       NULL |
+|    7 | Poonam  | Patna   |  45000 |       2000 |
+|    8 | Arjun   | Delhi   |  20000 |        900 |
+|    9 | Rahul   | Nagpur  |  60000 |       5000 |
+|   10 | Dulquer | Kochi   |  30000 |       1000 |
++------+---------+---------+--------+------------+
+10 rows in set (0.00 sec)
+
+mysql> select * from Project;
++-------+---------+
+| pr_no | addr    |
++-------+---------+
+|    10 | Mumbai  |
+|    20 | Pune    |
+|    30 | Jalgaon |
+|    40 | Nagpur  |
+|    50 | Delhi   |
+|    60 | Kochi   |
+|    70 | Pune    |
+|    80 | Nasik   |
++-------+---------+
+8 rows in set (0.00 sec)
+
+mysql> select address from Employee union select addr from Project;
++---------+
+| address |
++---------+
+| Nashik  |
+| Pune    |
+| Nasik   |
+| Mumbai  |
+| Jaipur  |
+| Patna   |
+| Delhi   |
+| Nagpur  |
+| Kochi   |
+| Jalgaon |
++---------+
+10 rows in set (0.00 sec)
+
+mysql> select address, min(salary) from Employee group by address;
++---------+-------------+
+| address | min(salary) |
++---------+-------------+
+| Delhi   |       20000 |
+| Jaipur  |       40000 |
+| Kochi   |       30000 |
+| Mumbai  |       19000 |
+| Nagpur  |       60000 |
+| Nashik  |       35000 |
+| Nasik   |       28000 |
+| Patna   |       45000 |
+| Pune    |       25000 |
++---------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> select address, max(salary) from Employee group by address where salary > 26000;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where salary > 26000' at line 1
+mysql> select address, min(salary) from Employee where salary > 26000 group by address;
++---------+-------------+
+| address | min(salary) |
++---------+-------------+
+| Jaipur  |       40000 |
+| Kochi   |       30000 |
+| Nagpur  |       60000 |
+| Nashik  |       35000 |
+| Nasik   |       28000 |
+| Patna   |       45000 |
++---------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> delete from Employee where salary > 30000;
+Query OK, 4 rows affected (0.03 sec)
+
+mysql> select * from Employee;
++------+---------+---------+--------+------------+
+| e_id | ename   | address | salary | commission |
++------+---------+---------+--------+------------+
+|    2 | Sneha   | Pune    |  25000 |       NULL |
+|    3 | Savita  | Nasik   |  28000 |       2000 |
+|    4 | Pooja   | Mumbai  |  19000 |       NULL |
+|    5 | Sagar   | Mumbai  |  25000 |       3000 |
+|    8 | Arjun   | Delhi   |  20000 |        900 |
+|   10 | Dulquer | Kochi   |  30000 |       1000 |
++------+---------+---------+--------+------------+
+6 rows in set (0.00 sec)
+
+mysql> delete from Employee where name like 'S%';
+ERROR 1054 (42S22): Unknown column 'name' in 'where clause'
+mysql> delete from Employee where ename like 'S%';
+Query OK, 3 rows affected (0.03 sec)
+
+mysql> select * from Employee;
++------+---------+---------+--------+------------+
+| e_id | ename   | address | salary | commission |
++------+---------+---------+--------+------------+
+|    4 | Pooja   | Mumbai  |  19000 |       NULL |
+|    8 | Arjun   | Delhi   |  20000 |        900 |
+|   10 | Dulquer | Kochi   |  30000 |       1000 |
++------+---------+---------+--------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from Employee where address = 'Pune' order by ename;
+Empty set (0.00 sec)
+
+mysql> select address, max(salary) from Employee where salary > 26000 group by address;
++---------+-------------+
+| address | max(salary) |
++---------+-------------+
+| Kochi   |       30000 |
++---------+-------------+
+1 row in set (0.00 sec)
+
+mysql> ^C
+mysql> notee;

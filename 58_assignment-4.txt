@@ -1,0 +1,80 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| assign_2           |
+| assign_2a          |
+| assign_3           |
+| db                 |
+| demo               |
+| mydatabase         |
+| mysql              |
+| performance_schema |
+| sachin             |
+| sys                |
+| umang              |
++--------------------+
+12 rows in set (0.14 sec)
+
+mysql> use umang;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-----------------+
+| Tables_in_umang |
++-----------------+
+| Employee        |
+| Project         |
+| product         |
+| suppliers       |
++-----------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from Employee;
++------+---------+---------+--------+------------+
+| e_id | ename   | address | salary | commission |
++------+---------+---------+--------+------------+
+|    4 | Pooja   | Mumbai  |  19000 |       NULL |
+|    8 | Arjun   | Delhi   |  20000 |        900 |
+|   10 | Dulquer | Kochi   |  30000 |       1000 |
++------+---------+---------+--------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from Project;
++-------+---------+
+| pr_no | addr    |
++-------+---------+
+|    10 | Mumbai  |
+|    20 | Pune    |
+|    30 | Jalgaon |
+|    40 | Nagpur  |
+|    50 | Delhi   |
+|    60 | Kochi   |
+|    70 | Pune    |
+|    80 | Nasik   |
++-------+---------+
+8 rows in set (0.00 sec)
+
+mysql> create table borrower(roll_no int,name varchar(40), dateOfIssue date, book_name varchar(35), status char);
+Query OK, 0 rows affected (0.26 sec)
+
+mysql> create table fine(roll_no int, date date, amount int);
+Query OK, 0 rows affected (0.37 sec)
+
+mysql> select * from borrower where 
+    -> roll_no = &roll_no;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '&roll_no' at line 2
+mysql> select * from borrower where roll_no=&roll_no;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '&roll_no' at line 1
+mysql> exit();
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'exit()' at line 1
+mysql> exit()
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'exit()' at line 1
+mysql> quit();
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'quit()' at line 1
+mysql> exit;
+mysql> tee 58_assignment-5.txt
